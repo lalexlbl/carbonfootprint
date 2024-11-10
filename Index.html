@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Footprint Calculator</title>
+    
+    <script src="script.js" defer></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Body Styling */
+        body {
+            background-color: #ffffff;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #43cea2;
+        }
+
+        /* Title and Section Headings */
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 600;
+            color: #2f80ed;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2f80ed;
+            margin: 15px 0 10px;
+            border-bottom: 2px solid #43cea2;
+            padding-bottom: 5px;
+        }
+
+        /* Language Selector */
+        .language-toggle {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .language-toggle button {
+            padding: 5px 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2f80ed;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Labels and Inputs */
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 400;
+            color: #333;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            outline: none;
+            background-color: #f9f9f9;
+            color: #333;
+            font-size: 1rem;
+        }
+
+        /* Button Styling */
+        button.calculate-button {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background: linear-gradient(135deg, #43cea2, #185a9d);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button.calculate-button:hover {
+            background: linear-gradient(135deg, #36d1dc, #5b86e5);
+        }
+
+        /* Results Section */
+        #results {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f0f8ff;
+            border-radius: 8px;
+        }
+
+        #totalEmissions {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        #breakdown p {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Language Toggle -->
+        <div class="language-toggle">
+            <button onclick="switchLanguage('en')">English</button> | <button onclick="switchLanguage('fr')">Français</button>
+        </div>
+
+        <!-- Main Title -->
+        <h1 id="title">Carbon Footprint Calculator</h1>
+        
+        <!-- Home Energy Section -->
+        <section id="home-energy">
+            <h2 id="homeEnergyTitle">Home Energy</h2>
+            <label for="electricity" id="electricityLabel">Monthly Electricity Usage (kWh):</label>
+            <input type="number" id="electricity" placeholder="Enter kWh">
+            
+            <label for="electricitySource" id="electricitySourceLabel">Electricity Source:</label>
+            <select id="electricitySource"></select>
+        </section>
+
+        <!-- Transportation Section -->
+        <section id="transportation">
+            <h2 id="transportationTitle">Transportation</h2>
+            <label for="carKilometers" id="carKilometersLabel">Annual Kilometers Driven:</label>
+            <input type="number" id="carKilometers" placeholder="Enter kilometers">
+            
+            <label for="carFuelEfficiency" id="carFuelEfficiencyLabel">Fuel Efficiency (liters per 100 km):</label>
+            <input type="number" id="carFuelEfficiency" placeholder="Enter liters per 100 km">
+
+            <label for="shortFlights" id="shortFlightsLabel">Short Flights (up to 3 hours) per year:</label>
+            <input type="number" id="shortFlights" placeholder="Enter number of flights">
+            
+            <label for="mediumFlights" id="mediumFlightsLabel">Medium Flights (3-6 hours) per year:</label>
+            <input type="number" id="mediumFlights" placeholder="Enter number of flights">
+            
+            <label for="longFlights" id="longFlightsLabel">Long Flights (6+ hours) per year:</label>
+            <input type="number" id="longFlights" placeholder="Enter number of flights">
+        </section>
+
+        <!-- Food Section -->
+        <section id="food">
+            <h2 id="foodTitle">Food Consumption</h2>
+            <label for="diet" id="dietLabel">Select Dietary Type:</label>
+            <select id="diet"></select>
+        </section>
+
+        <!-- Goods Section -->
+        <section id="goods">
+            <h2 id="goodsTitle">Goods and Services</h2>
+            <label for="monthlySpending" id="monthlySpendingLabel">Monthly Spending on Goods & Services ($):</label>
+            <input type="number" id="monthlySpending" placeholder="Enter Amount">
+        </section>
+
+        <!-- Calculate Button -->
+        <button onclick="calculateCarbonFootprint()" class="calculate-button" id="calculateButton">Calculate Footprint</button>
+
+        <!-- Results Section -->
+        <section id="results">
+            <h2 id="resultsTitle">Your Carbon Footprint</h2>
+            <p id="totalEmissions">Total Annual CO₂ Emissions: </p>
+            <div id="breakdown"></div>
+        </section>
+    </div>
+</body>
+</html>
